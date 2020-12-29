@@ -130,6 +130,8 @@ app.post('/update', function(request, response){
           console.log("git hub test");
           console.log("git hub t111");
           console.log("clone is ok????");
+                     console.log("clone is xx????");
+                     console.log("clone is xxx????");
         })
       });
   });
