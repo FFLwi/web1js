@@ -129,6 +129,7 @@ app.post('/update', function(request, response){
           response.end();
           console.log("git hub test");
           console.log("git hub t111");
+          console.log("clone is ok????");
         })
       });
   });
