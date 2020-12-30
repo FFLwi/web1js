@@ -1,15 +1,12 @@
 var express = require('express')
 var app = express()
 var fs = require('fs');
-var bodyParser = require('body-parser');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var template = require('./lib/template.js');
- var qs= require('querystring');
+ var qs= require('qs');
 //route, routing
 //app.get('/', (req, res) => res.send('Hello World!'))
-app.use(bodyParser.urlencoded({ extended: false }));
-
 app.get('/', function(request, response) { 
   fs.readdir('./data', function(error, filelist){
     //console.log(queryData.id);
@@ -75,15 +72,19 @@ app.get('/page/:pageId', function(request, response) {
 });
 
 app.post('/create', function(request, response){
- 
-      var post = request.body;
+  var body = '';
+  request.on('data', function(data){
+      body = body + data;
+  });
+  request.on('end', function(){
+      var post = qs.parse(body);
       var title = post.title;
       var description = post.description;
       fs.writeFile(`data/${title}`, description, 'utf8', function(err){
         response.writeHead(302, {Location: `/?id=${title}`});
         response.end();
       })
-  
+  });
 });
 
 app.get('/update/:pageId',function(request, response){
@@ -113,30 +114,44 @@ app.get('/update/:pageId',function(request, response){
 });
 
 app.post('/update', function(request, response){
-  
-      var post = request.body;
+  var body = '';
+  request.on('data', function(data){
+      body = body + data;
+  });
+  request.on('end', function(){
+      var post = qs.parse(body);
       var id = post.id;
       var title = post.title;
       var description = post.description;
       fs.rename(`data/${id}`, `data/${title}`, function(error){
         fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-          response.redirect(`/?=${title}`);
-        
+          response.writeHead(302, {Location: `/`});
+          response.end();
+          console.log("git hub test");
+          console.log("git hub t111");
+          console.log("clone is ok????");
+                     console.log("clone is xx????");
+                     console.log("clone is xxx????");
+                     console.log("branch apple");
         })
       });
-  
+  });
 });
 
 app.post('/delete',function(request, response){
- 
-    
-    var post=request.body;
+  var body='';
+  request.on('data',function(data){
+  body=body+data;
+  });
+  request.on('end',function(){
+    var post=qs.parse(body);
     var id = post.id;
     var filtereId =path.parse(id).base;
     fs.unlink(`data/${filtereId}`,function(error){
       response.redirect('/');
+      console.log("express framework end");
     });
-  
+  });
 });
 
 
