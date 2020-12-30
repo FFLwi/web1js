@@ -149,6 +149,7 @@ app.post('/delete',function(request, response){
     var filtereId =path.parse(id).base;
     fs.unlink(`data/${filtereId}`,function(error){
       response.redirect('/');
+      console.log("express framework end");
     });
   });
 });
