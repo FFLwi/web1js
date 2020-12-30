@@ -40,7 +40,7 @@ app.get('/page/:pageId', function(request, response) {
         `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
         ` <a href="/create">create</a>
           <a href="/update/${sanitizedTitle}">update</a>
-          <form action="delete_process" method="post">
+          <form action="/delete" method="post">
             <input type="hidden" name="id" value="${sanitizedTitle}">
             <input type="submit" value="delete">
           </form>`
@@ -137,6 +137,22 @@ app.post('/update', function(request, response){
       });
   });
 });
+
+app.post('/delete',function(request, response){
+  var body='';
+  request.on('data',function(data){
+  body=body+data;
+  });
+  request.on('end',function(){
+    var post=qs.parse(body);
+    var id = post.id;
+    var filtereId =path.parse(id).base;
+    fs.unlink(`data/${filtereId}`,function(error){
+      response.redirect('/');
+    });
+  });
+});
+
 
 app.listen(3000, function() {
   console.log('Example app listening on port 3000!')
